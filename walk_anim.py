@@ -21,6 +21,7 @@ class Player(pygame.sprite.Sprite):
 		self.dead_move = 1
 		self.attention = attention
 		self.color = color
+		self.before_pos = self.pos
 
 	def update(self, secCam=0, color=(255, 0, 0), in_vent = False, Not_Alive = False, attention_pos=None):
 		if attention_pos[0]==self.pos[0] and attention_pos[1]==self.pos[1]:
@@ -38,21 +39,21 @@ class Player(pygame.sprite.Sprite):
 			if pygame.mixer.Channel(3).get_busy() == 0:
 				pygame.mixer.Channel(3).set_volume(0.2)
 				pygame.mixer.Channel(3).play(pygame.mixer.Sound(f'bgs/Player/Footsteps/Metal/FootstepMetal0{random.randint(1,8)}.wav'))
-		if keys[K_d]:
+		if self.pos[0]<self.before_pos[0]:
 			self.flip = 1
 			self.image = pygame.image.load(f"images/Sprites/Walk/walkcolor00{int(self.move)}.png")
 			self.move += self.speed
 			self.x = 1
-		elif keys[K_a]:
+		elif self.pos[0]>self.before_pos[0]:
 			self.flip = 0
 			self.image = pygame.image.load(f"images/Sprites/Walk/walkcolor00{int(self.move)}.png")
 			self.move += self.speed
 			self.x = 1
-		elif keys[K_w]:
+		elif self.pos[1]>self.before_pos[1]:
 			self.image = pygame.image.load(f"images/Sprites/Walk/walkcolor00{int(self.move)}.png")
 			self.move += self.speed
 			self.y = 1
-		elif keys[K_s]:
+		elif self.pos[1]<self.before_pos[1]:
 			self.image = pygame.image.load(f"images/Sprites/Walk/walkcolor00{int(self.move)}.png")
 			self.move += self.speed
 			self.y = 1
@@ -60,6 +61,7 @@ class Player(pygame.sprite.Sprite):
 			self.image = pygame.image.load(self.location)
 			self.move = 1
 			self.x, self.y = 0, 0
+		self.before_pos = self.pos.copy()
 
 		if self.move == 13:
 			self.move = 1

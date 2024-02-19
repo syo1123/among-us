@@ -370,18 +370,20 @@ class Free_play():
 								pygame.mixer.Channel(4).play(pygame.mixer.Sound(f'bgs/Among Us General Sounds/task_Complete.wav'))
 			player_attention = [player for player in players if player.attention==True][0]
 			for player in players:
+				# player action
 				keys = pygame.key.get_pressed()
 				a,b = player.pos
 				before_pos = a, b
+				if player.attention:
 
-				if keys[K_w]:
-					b += 3
-				if keys[K_a]:
-					a += 5
-				if keys[K_s]:
-					b -= 3
-				if keys[K_d]:
-					a -= 5
+					if keys[K_w]:
+						b += 3
+					if keys[K_a]:
+						a += 5
+					if keys[K_s]:
+						b -= 3
+					if keys[K_d]:
+						a -= 5
 
 				if player.attention:
 					#weapons
@@ -639,39 +641,27 @@ class Free_play():
 					report.image = reportoff
 
 
-				if not player.attention:
-					print([a,b])
 				for i in collision:
 					# if pygame.sprite.collide_rect(player, i):
 
 					if keys[pygame.K_w]:
 						if abs(player.rect.top - i.rect.bottom) < 10 and hit:
 							b = before_pos[1]
-							if not player.attention:
-								print('hit')
 
 					if keys[pygame.K_a]:
 						if abs(player.rect.left - i.rect.right) < 10 and hit:
 							a = before_pos[0]
-							if not player.attention:
-								print('hit')
 
 					if keys[pygame.K_s]:
 						if abs(player.rect.bottom - i.rect.top) < 10 and hit:
 							b = before_pos[1]
-							if not player.attention:
-								print('hit')
 
 					if keys[pygame.K_d]:
 						if abs(player.rect.right - i.rect.left) < 10 and hit:
 							a = before_pos[0]
-							if not player.attention:
-								print('hit')
 
 				players.draw(screen)
 				coll = a, b
-				if not player.attention:
-					print([a,b])
 
 				#on the player
 				a, b = prev
@@ -754,7 +744,6 @@ class Free_play():
 				"""
 				ここまで
 				"""
-			print('\n')
 
 			#wall_group.draw(screen)
 
