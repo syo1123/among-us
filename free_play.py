@@ -212,6 +212,7 @@ class Free_play():
 
 		topos = []
 		sps = []
+		wall = [w for w in wall_group]
 
 		#buttons
 		tasks = Sprite(surface = pygame.image.load("models/buttons/tasks.png"))
@@ -573,9 +574,15 @@ class Free_play():
 
 				coll1 = pygame.surface.Surface([150, 100])
 				h = coll1.get_rect()
+				if not player.attention:
+					for w in wall_group:
+						w.rect.x+= player_attention.pos[0]-player.pos[0]
+						w.rect.y+= player_attention.pos[1]-player.pos[1]
 
 				hit = pygame.sprite.spritecollide(player, wall_group, False)
 				did = 0
+
+
 
 				prev = a, b
 
@@ -631,28 +638,40 @@ class Free_play():
 				else:
 					report.image = reportoff
 
+
+				if not player.attention:
+					print([a,b])
 				for i in collision:
-					if pygame.sprite.collide_rect(player, i):
+					# if pygame.sprite.collide_rect(player, i):
 
-						if keys[pygame.K_w]:
-							if abs(player.rect.top - i.rect.bottom) < 10 and hit:
-								b = before_pos[1]
+					if keys[pygame.K_w]:
+						if abs(player.rect.top - i.rect.bottom) < 10 and hit:
+							b = before_pos[1]
+							if not player.attention:
+								print('hit')
 
+					if keys[pygame.K_a]:
+						if abs(player.rect.left - i.rect.right) < 10 and hit:
+							a = before_pos[0]
+							if not player.attention:
+								print('hit')
 
-						if keys[pygame.K_a]:
-							if abs(player.rect.left - i.rect.right) < 10 and hit:
-								a = before_pos[0]
+					if keys[pygame.K_s]:
+						if abs(player.rect.bottom - i.rect.top) < 10 and hit:
+							b = before_pos[1]
+							if not player.attention:
+								print('hit')
 
-						if keys[pygame.K_s]:
-							if abs(player.rect.bottom - i.rect.top) < 10 and hit:
-								b = before_pos[1]
-
-						if keys[pygame.K_d]:
-							if abs(player.rect.right - i.rect.left) < 10 and hit:
-								a = before_pos[0]
+					if keys[pygame.K_d]:
+						if abs(player.rect.right - i.rect.left) < 10 and hit:
+							a = before_pos[0]
+							if not player.attention:
+								print('hit')
 
 				players.draw(screen)
 				coll = a, b
+				if not player.attention:
+					print([a,b])
 
 				#on the player
 				a, b = prev
@@ -693,48 +712,49 @@ class Free_play():
 					screen.blit(rec1, (-1466+a, 824+b))
 					screen.blit(low5, (-1074+a, 563+b))
 
-					a, b = coll
+				a, b = coll
 
-					#buttons
-					button_group.draw(screen)
+				#buttons
+				button_group.draw(screen)
 
-					if secCam == 1:
-						screen.blit(secC1, (-200, 0))
-						screen.blit(secC2, (809, 245))
-						screen.blit(secC3, (82, 230))
+				if secCam == 1:
+					screen.blit(secC1, (-200, 0))
+					screen.blit(secC2, (809, 245))
+					screen.blit(secC3, (82, 230))
 
-						if 809 < pygame.mouse.get_pos()[0] < 809+60 and 245 < pygame.mouse.get_pos()[1] < 245+60 and pygame.mouse.get_pressed()[0]:
-							secCNum += 0.5
-							if secCNum > 5:
-								secCNum = 1
+					if 809 < pygame.mouse.get_pos()[0] < 809+60 and 245 < pygame.mouse.get_pos()[1] < 245+60 and pygame.mouse.get_pressed()[0]:
+						secCNum += 0.5
+						if secCNum > 5:
+							secCNum = 1
 
-						if 82 < pygame.mouse.get_pos()[0] < 82+60 and 230 < pygame.mouse.get_pos()[1] < 230+60 and pygame.mouse.get_pressed()[0]:
-							secCNum -= 0.5
-							if secCNum < 1:
-								secCNum = 4.5
+					if 82 < pygame.mouse.get_pos()[0] < 82+60 and 230 < pygame.mouse.get_pos()[1] < 230+60 and pygame.mouse.get_pressed()[0]:
+						secCNum -= 0.5
+						if secCNum < 1:
+							secCNum = 4.5
 
-						if int(secCNum) == 1:
-							a, b = (1365, -720)
-						elif int(secCNum) == 2:
-							a, b = (785, -99)
-						elif int(secCNum) == 3:
-							a, b = 5, -825
-						else:
-							a, b = -1025, -660
+					if int(secCNum) == 1:
+						a, b = (1365, -720)
+					elif int(secCNum) == 2:
+						a, b = (785, -99)
+					elif int(secCNum) == 3:
+						a, b = 5, -825
+					else:
+						a, b = -1025, -660
 
-						close = pygame.image.load("models/buttons/close.png")
-						screen.blit(close, (100, 25))
+					close = pygame.image.load("models/buttons/close.png")
+					screen.blit(close, (100, 25))
 
-						if 117 < pygame.mouse.get_pos()[0] < 155 and 41 < pygame.mouse.get_pos()[1] < 78 and pygame.mouse.get_pressed()[0]:
-							secCam = 0
-							a, b = cc
-							cc = None
+					if 117 < pygame.mouse.get_pos()[0] < 155 and 41 < pygame.mouse.get_pos()[1] < 78 and pygame.mouse.get_pressed()[0]:
+						secCam = 0
+						a, b = cc
+						cc = None
 				player.pos[0]=a
 				player.pos[1]=b
 
 				"""
 				ここまで
 				"""
+			print('\n')
 
 			#wall_group.draw(screen)
 
