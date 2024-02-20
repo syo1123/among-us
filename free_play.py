@@ -193,7 +193,7 @@ class Free_play():
 
 		collision = [Sprite(k, l) for i,j,k,l in coll_loc]
 		# player = Player()
-		player1 = Player(init_pos = [a,b], attention=False)
+		player1 = Player(init_pos = [a,b], attention=False, imposter=True)
 		player2 = Player(init_pos=[0,0],attention = True, color = (0,255,0))
 
 		players = pygame.sprite.Group()
@@ -251,14 +251,15 @@ class Free_play():
 		mous_grp = pygame.sprite.Group()
 		mous_grp.add(mousebut)
 
-		imposter = False
+		self.imposter = False
 
-		if imposter:
+		if self.imposter:
 			tasks.rect.x, tasks.rect.y = (0, -200)
 		else:
 			sabotage.rect.x, sabotage.rect.y = 0, -200
 			kill.rect.x, kill.rect.y = 0, -200
 			vent.rect.x, vent.rect.y = 0, -200
+
 
 		tskpos = [(1290, 405, 10, 10), (1290, 233, 10, 10), (1478, 397, 10, 10),
 					(920, 256, 10, 10), (841, 180, 10, 10), (117, 121, 10, 10),
@@ -295,7 +296,7 @@ class Free_play():
 
 		dead_bodys = [(100, 100, 100, 100)]
 		f = []
-		Tasks = Tasks()
+		Task = Tasks()
 
 		#secCam
 		secCam = 0
@@ -304,7 +305,14 @@ class Free_play():
 		secC3 = pygame.image.load("models/tasks/Security Camera/sec-3.png")
 		secCNum = 1
 
+
+
+
+
+
 		while True:
+
+
 			c += 1
 			wall_group.draw(screen)
 			mousebut.rect.x, mousebut.rect.y = pygame.mouse.get_pos()
@@ -324,56 +332,77 @@ class Free_play():
 					for i in range(len(but)):
 						smashhit = pygame.sprite.collide_rect(mousebut, but[i])
 						if smashhit and pygame.mouse.get_pressed()[0]:
-							if tasksToDo in ToDo and not imposter:
+							if tasksToDo in ToDo and not self.imposter:
 								pygame.mixer.Channel(4).play(pygame.mixer.Sound(f'bgs/Among Us General Sounds/task_Inprogress.wav'))
 								if ToDo[tasksToDo] == 0:
-									Tasks.swipeCard()
+									Task.swipeCard()
 								elif ToDo[tasksToDo] == 1:
-									Tasks.fixWiring()
+									Task.fixWiring()
 								elif ToDo[tasksToDo] == 2:
-									Tasks.emptyGarbage()
+									Task.emptyGarbage()
 								elif ToDo[tasksToDo] == 3:
-									Tasks.upload()
+									Task.upload()
 								elif ToDo[tasksToDo] == 4:
-									Tasks.Download(1)
+									Task.Download(1)
 								elif ToDo[tasksToDo] == 5:
-									Tasks.clearLeaves()
+									Task.clearLeaves()
 								elif ToDo[tasksToDo] == 6:
-									Tasks.alignEngine()
+									Task.alignEngine()
 								elif ToDo[tasksToDo] == 7:
-									Tasks.calibrate()
+									Task.calibrate()
 								elif ToDo[tasksToDo] == 8:
-									Tasks.chartCourse()
+									Task.chartCourse()
 								elif ToDo[tasksToDo] == 9:
-									Tasks.weapons()
+									Task.weapons()
 								elif ToDo[tasksToDo] == 10:
-									Tasks.divertPower(1)
+									Task.divertPower(1)
 								elif ToDo[tasksToDo] == 11:
-									Tasks.fualEngine()
+									Task.fualEngine()
 								elif ToDo[tasksToDo] == 12:
-									Tasks.fillCan()
+									Task.fillCan()
 								elif ToDo[tasksToDo] == 13:
-									Tasks.inspectSample()
+									Task.inspectSample()
 								elif ToDo[tasksToDo] == 14:
-									Tasks.primeShield()
+									Task.primeShield()
 								elif ToDo[tasksToDo] == 15:
-									Tasks.stabSteering()
+									Task.stabSteering()
 								elif ToDo[tasksToDo] == 16:
-									Tasks.unlockManifolds()
-								elif ToDo[tasksToDo] == 17:
-									Tasks.starReactor()
-								elif ToDo[tasksToDo] == 18:
-									Tasks.acceptPower()
+									Task.unlockManifolds()
+								elif ToDo[TaskToDo] == 17:
+									Task.starReactor()
+								elif ToDo[TaskToDo] == 18:
+									Task.acceptPower()
 								elif ToDo[tasksToDo] == 19:
-									Tasks.medbayScan()
+									Task.medbayScan()
 
 								pygame.mixer.Channel(4).play(pygame.mixer.Sound(f'bgs/Among Us General Sounds/task_Complete.wav'))
-			player_attention = [player for player in players if player.attention==True][0]
 			for player in players:
 				# player action
 				keys = pygame.key.get_pressed()
+				self.imposter = player.imposter
+				if self.imposter:
+					tasks.rect.x, tasks.rect.y = 0, -200
+					kill.rect.x, kill.rect.y = 789, 444
+					sabotage.rect.x, sabotage.rect.y = 897, 446
+					vent.rect.x, vent.rect.y = 897, 446
+				else:
+					tasks.rect.x, tasks.rect.y = 897, 446
+					sabotage.rect.x, sabotage.rect.y = 0, -200
+					kill.rect.x, kill.rect.y = 0, -200
+					vent.rect.x, vent.rect.y = 0, -200
+
+					
+				if keys[K_1]:
+					for p in players:
+						p.attention = False
+					player1.attention = True
+				elif keys[K_2]:
+					for p in players:
+						p.attention = False
+					player2.attention = True
 				a,b = player.pos
 				before_pos = a, b
+				player_attention = [player for player in players if player.attention==True][0]
 				if player.attention:
 
 					if keys[K_w]:
@@ -384,6 +413,7 @@ class Free_play():
 						b -= 3
 					if keys[K_d]:
 						a -= 5
+
 
 				if player.attention:
 					#weapons

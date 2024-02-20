@@ -3,7 +3,7 @@ from pygame.locals import *
 import random
 
 class Player(pygame.sprite.Sprite):
-	def __init__(self, location = "images/Sprites/idle.png", init_pos = [0,0], attention = False, color =(255,0,0)):
+	def __init__(self, location = "images/Sprites/idle.png", init_pos = [0,0], attention = False, color =(255,0,0), imposter=False):
 
 		pygame.sprite.Sprite.__init__(self)
 
@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
 		self.attention = attention
 		self.color = color
 		self.before_pos = self.pos
+		self.imposter = imposter
 
 	def update(self, secCam=0, color=(255, 0, 0), in_vent = False, Not_Alive = False, attention_pos=None):
 		if attention_pos[0]==self.pos[0] and attention_pos[1]==self.pos[1]:
